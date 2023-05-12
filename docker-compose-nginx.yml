@@ -28,8 +28,8 @@ services:
       - "5440:5432"
 
   web:
-    image: public.ecr.aws/i0m6d4r8/libpoblete:latest
     container_name: super_apiWebDeploy
+    build: .
     sysctls:
       net.core.somaxconn: 1024
     logging:
