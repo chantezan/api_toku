@@ -86,7 +86,7 @@ WSGI_APPLICATION = "super_api.wsgi.application"
 CELERY_BEAT_SCHEDULE = {
       'update-heros': {
         'task': 'appname.tasks.update_data',
-        'schedule': crontab(minute='*/2'),
+        'schedule': crontab(minute='*/15'),
     },
 }
 
