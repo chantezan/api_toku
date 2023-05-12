@@ -4,7 +4,7 @@ services:
     image: nginx:latest
     container_name: ng02
     env_file:
-    - ../.env
+    - .env
     ports:
     - "80:80"
     - "443:443"
@@ -15,9 +15,21 @@ services:
     depends_on:
     - web
 
+  db:
+    container_name: postgres_superapi
+    image: postgres:14
+    volumes:
+      - ../data_vuxko/db:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_DB=super_dev
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    ports:
+      - "5440:5432"
+
   web:
     image: public.ecr.aws/i0m6d4r8/libpoblete:latest
-    container_name: vuxkoWebDeploy
+    container_name: super_apiWebDeploy
     sysctls:
       net.core.somaxconn: 1024
     logging:
@@ -27,7 +39,7 @@ services:
     command: bash -c "
                python manage.py migrate && uwsgi --ini uwsgi.ini"
     env_file:
-    - ../.env
+    - .env
     volumes:
     - ./:/code
     - /home/ubuntu/:/home
@@ -45,7 +57,7 @@ services:
 
   celery:
     image: public.ecr.aws/i0m6d4r8/libpoblete:latest
-    container_name: vuxkoWebCelery
+    container_name: super_apiWebCelery
     sysctls:
       net.core.somaxconn: 1024
     logging:
@@ -53,8 +65,8 @@ services:
         max-size: "2m"
         max-file: "1"
     env_file:
-    - ../.env
-    command: celery -A vuxkotrade.celery worker -B -l info
+    - .env
+    command: celery -A super_api.celery worker -B -l info
     volumes:
     - .:/code
     depends_on:
