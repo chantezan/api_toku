@@ -56,8 +56,8 @@ services:
     - "6378:6379"
 
   celery:
-    image: public.ecr.aws/i0m6d4r8/libpoblete:latest
     container_name: super_apiWebCelery
+    build: .
     sysctls:
       net.core.somaxconn: 1024
     logging:
