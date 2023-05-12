@@ -1,0 +1,63 @@
+version: '3'
+services:
+  nginx:
+    image: nginx:latest
+    container_name: ng02
+    env_file:
+    - ../.env
+    ports:
+    - "80:80"
+    - "443:443"
+    volumes:
+    - ./:/src
+    - /home/ubuntu:/cert
+    - ./nginx:/etc/nginx/conf.d
+    depends_on:
+    - web
+
+  web:
+    image: public.ecr.aws/i0m6d4r8/libpoblete:latest
+    container_name: vuxkoWebDeploy
+    sysctls:
+      net.core.somaxconn: 1024
+    logging:
+      options:
+        max-size: "2m"
+        max-file: "1"
+    command: bash -c "
+               python manage.py migrate && uwsgi --ini uwsgi.ini"
+    env_file:
+    - ../.env
+    volumes:
+    - ./:/code
+    - /home/ubuntu/:/home
+    expose:
+    - "3000"
+    tty: true
+    depends_on:
+    - redis
+
+  redis:
+    image: "redis:latest"
+    container_name: vuxkoWebredis
+    ports:
+    - "6378:6379"
+
+  celery:
+    image: public.ecr.aws/i0m6d4r8/libpoblete:latest
+    container_name: vuxkoWebCelery
+    sysctls:
+      net.core.somaxconn: 1024
+    logging:
+      options:
+        max-size: "2m"
+        max-file: "1"
+    env_file:
+    - ../.env
+    command: celery -A vuxkotrade.celery worker -B -l info
+    volumes:
+    - .:/code
+    depends_on:
+    - redis
+
+
