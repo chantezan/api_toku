@@ -32,4 +32,10 @@ El proyecto incluye archivos de configuración Docker para entornos de desarroll
 ### Como se hizo
 
 El proyecto esta consultando cada 15m con un celery task a la data y actualiza los registros de los heroes, despues
-con resframework se crearon endpoint y filtros para los heroes, y la documentacion fue generada por swagger
+con resframework se crearon endpoint y filtros para los heroes, y la documentacion fue generada por swagger.
+Las herramientas de monitoreo estan en aws para medir la tasa de respuesta y la tasa de errores
+
+### Que falto
+
+1. La creacion de test
+2. La inclusion del precommit en el ci/cd
