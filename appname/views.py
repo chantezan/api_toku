@@ -149,7 +149,7 @@ class HeroApi(generics.GenericAPIView):
     filterset_class = HeroFilter
 
     @swagger_auto_schema(
-        operation_summary="Return all heroe",
+        operation_summary="Return all heroes",
         operation_description="Return all heros in filter.",
         responses={
             200: "Heros"
